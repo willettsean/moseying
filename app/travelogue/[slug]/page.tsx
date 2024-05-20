@@ -1,26 +1,70 @@
-'use client'
+import { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { getAllPosts, getPostBySlug } from "@/lib/api";
+import { CMS_NAME } from "@/lib/constants";
+import markdownToHtml from "@/lib/markdownToHtml";
+import Alert from "@/components/alert";
+import Container from "@/components/container";
+import Header from "@/components/header";
+import { PostBody } from "@/components/post-body";
+import { PostHeader } from "@/components/post-header";
 
-import { usePathname } from 'next/navigation';
-import travelogues from '../../../data/travelogues';
+export default async function Post({ params }: Params) {
+  const post = getPostBySlug(params.slug);
 
-export default function TravelogueEntryPage() {
-    const pathname = usePathname();
-    const slug = pathname.split('/').filter(Boolean).pop();
+  if (!post) {
+    return notFound();
+  }
 
-    const travelogue = travelogues.find(t => t.slug === slug);
-    if (!travelogue) {
-        return <p>Travelogue not found.</p>;
-    }
-    console.log("Pathname: ", pathname);
-    console.log("Slug: ", slug);
-    console.log("Travelogue found: ", travelogue);
+  const content = await markdownToHtml(post.content || "");
 
+  return (
+    <main>
+      <Alert preview={post.preview} />
+      <Container>
+        <Header />
+        <article className="mb-32">
+          <PostHeader
+            title={post.title}
+            coverImage={post.coverImage}
+            date={post.date}
+            author={post.author}
+          />
+          <PostBody content={content} />
+        </article>
+      </Container>
+    </main>
+  );
+}
 
-    return (
-        <div>
-            <h1>{travelogue.title}</h1>
-            <p>{travelogue.summary}</p>
-            <p><strong>Date of Visit:</strong> {travelogue.date}</p>
-        </div>
-    );
+type Params = {
+  params: {
+    slug: string;
+  };
+};
+
+export function generateMetadata({ params }: Params): Metadata {
+  const post = getPostBySlug(params.slug);
+
+  if (!post) {
+    return notFound();
+  }
+
+  const title = `${post.title} | Next.js Blog Example with ${CMS_NAME}`;
+
+  return {
+    title,
+    openGraph: {
+      title,
+      images: [post.ogImage.url],
+    },
+  };
+}
+
+export async function generateStaticParams() {
+  const posts = getAllPosts();
+
+  return posts.map((post) => ({
+    slug: post.slug,
+  }));
 }

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Lora } from "next/font/google";
 import "./globals.css";
 import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
 
 const inter = Lora({ subsets: ["latin"] });
 
@@ -23,7 +22,6 @@ export default function RootLayout({
         <Navbar />
       </div>
       {children}
-      <Footer />
       </body>
     </html>
   );

@@ -1,22 +1,29 @@
-import Link from 'next/link';
-import travelogues from '../../data/travelogues';
+import Container from "@/components/container";
+import { HeroPost } from "@/components/hero-post";
+import { Intro } from "@/components/intro";
+import { MoreStories } from "@/components/more-stories";
+import { getAllPosts } from "@/lib/api";
 
-export default function Travelogue() {
-  const sortedTravelogues = travelogues.sort((a,b) => {
-    return new Date(b.date).getTime() - new Date(a.date).getTime();
-  })
+export default function Index() {
+  const allPosts = getAllPosts();
+
+  const heroPost = allPosts[0];
+
+  const morePosts = allPosts.slice(1);
+
   return (
-    <div>
-      <h1 className="centered-title">moseying</h1>
-      <ul>
-        {sortedTravelogues.map((travelogue) => (
-          <li key={travelogue.slug}>
-            <Link href={`/travelogue/${travelogue.slug}`}>
-              {travelogue.title} - {travelogue.date}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <main>
+      <Container>
+        <Intro />
+        <HeroPost
+          title={heroPost.title}
+          coverImage={heroPost.coverImage}
+          date={heroPost.date}
+          slug={heroPost.slug}
+          excerpt={heroPost.excerpt}
+        />
+        {morePosts.length > 0 && <MoreStories posts={morePosts} />}
+      </Container>
+    </main>
   );
 }

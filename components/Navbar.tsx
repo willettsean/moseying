@@ -23,6 +23,10 @@ const Navbar = () => {
           <a href="https://www.linkedin.com/in/siwillett/" target="_blank" rel="noopener noreferrer"> linkedin
           </a>
         </li>
+        <li>
+          <a href="https://github.com/willettsean" target="_blank" rel="noopener noreferrer"> github
+          </a>
+        </li>
       </ul>
       <ul>
         <li>

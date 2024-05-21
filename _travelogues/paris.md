@@ -7,7 +7,7 @@ author:
   name: Sean
 #   picture: "/assets/blog/authors/jj.jpeg"
 ogImage:
-  url: "/assets/blog/dynamic-routing/cover.jpg"
+  url: "/images/travelogues/paris/arc-triumphe.jpg"
 ---
 
 stories about my time in paris
